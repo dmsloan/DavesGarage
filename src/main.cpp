@@ -32,7 +32,8 @@ void setup() {
   g_linehight = g_oled.getFontAscent() - g_oled.getFontDescent(); // Decent is a negative number so we add it to the total
   g_oled.setCursor(0,g_linehight);                                // Place cursor at bottom of first line of text
   g_oled.print("Dave's Garage");
-  g_oled.printf("Line height: %d", g_linehight);
+  g_oled.setCursor(0,g_linehight*2);                              // Place cursor at bottom of second line of text
+    g_oled.printf("Line height: %d", g_linehight);
   g_oled.sendBuffer();                                            // Print it out to the OLED
 }
 
