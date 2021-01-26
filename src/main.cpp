@@ -1,5 +1,19 @@
-#include <Arduino.h>
-#include <U8g2lib.h>
+//+--------------------------------------------------------------------------
+// This is from a Youtube series by Dave's Garage
+// 
+//
+// File:        LED Episode 02
+//
+// Description:
+//
+// Draws sample effects on the intergrated OLED
+//
+// History:     Jan-25-2021     Derek      Created
+//
+//---------------------------------------------------------------------------
+
+#include <Arduino.h>    // Arduino Framework
+#include <U8g2lib.h>  // For text on the little on-chip OLED
 
 #define OLED_CLOCK 15     // Pins for OLED display
 #define OLED_DATA 4
