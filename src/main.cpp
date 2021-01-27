@@ -16,6 +16,9 @@
 #include <Arduino.h>    // Arduino Framework
 #include <U8g2lib.h>  // For text on the little on-chip OLED
 
+// for the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
+// for the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
+
 #define OLED_CLOCK 15     // Pins for OLED display
 #define OLED_DATA 4
 #define OLED_RESET 16
