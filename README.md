@@ -38,6 +38,7 @@ Board name WEMOS LOLIN32.<br/>
         <li>DATA 5</li>
         <li>RESET 16</li>
 </ul>
+
 ![Pin Functions](docs/WemosESP32OLEDTop.jpg)
 ![Pin Functions](docs/WemosESP32OLEDBottom.jpg)
 ![Pin Functions](docs/WemosESP32OLEDPinout.jpg)
