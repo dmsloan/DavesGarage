@@ -67,7 +67,7 @@ void setup() {
   g_oled.clear(); //sets curser at 0,0. Text draws from the bottom up so you will see nothing.
   g_oled.setFont(u8g2_font_profont15_tf);
   g_linehight = g_oled.getFontAscent() - g_oled.getFontDescent(); // Decent is a negative number so we add it to the total
- 
+
   FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);               // Add our LED strip to the FastLED library
   FastLED.setBrightness(g_Brightness);
   FastLED.setMaxPowerInMilliWatts(g_MaxPowerInMilliWatts);
@@ -82,6 +82,21 @@ double FramesPerSecond (double seconds){
   static double framesPerSecond;
   framesPerSecond = (framesPerSecond * 0.9) + (1.0 / seconds * 0.1);
   return framesPerSecond;
+}
+
+void DrawReticle(){
+  // Draw a reticle on the right hand side
+
+  const int reticleY = g_oled.getHeight() / 2;                  // Vertical center of display
+  const int reticleR = g_oled.getHeight() / 4 - 2;              // Slightly less than 1/4 screen height
+  const int reticleX = g_oled.getWidth() - reticleR - 8;        // Right justified plus a margin
+   
+  for (int r = reticleR; r > 0; r -= 3)
+    g_oled.drawCircle(reticleX, reticleY, r);                   // Draw a series of nested circles
+
+  g_oled.drawHLine(reticleX - reticleR - 5, reticleY, 2 * reticleR + 10); // Horizontal line through center
+  g_oled.drawVLine(reticleX, reticleY - reticleR -5 , 2 * reticleR + 10); // Vertical line through center
+  g_oled.sendBuffer();                                            // Print it out to the OLED
 }
 
 void DrawLinesAngGrapicaFrame(int framesPerSecond){
@@ -103,19 +118,6 @@ void DrawLinesAngGrapicaFrame(int framesPerSecond){
   for (int x = 0; x < g_oled.getWidth(); x += 4)
     g_oled.drawLine(x,0,g_oled.getWidth()-x,g_oled.getHeight());
 
-  // Draw a reticle on the right hand side
-
-  const int reticleY = g_oled.getHeight() / 2;                  // Vertical center of display
-  const int reticleR = g_oled.getHeight() / 4 - 2;              // Slightly less than 1/4 screen height
-  const int reticleX = g_oled.getWidth() - reticleR - 8;        // Right justified plus a margin
-   
-  for (int r = reticleR; r > 0; r -= 3)
-    g_oled.drawCircle(reticleX, reticleY, r);                   // Draw a series of nested circles
-
-  g_oled.drawHLine(reticleX - reticleR - 5, reticleY, 2 * reticleR + 10); // Horizontal line through center
-  g_oled.drawVLine(reticleX, reticleY - reticleR -5 , 2 * reticleR + 10); // Vertical line through center
-
-  g_oled.sendBuffer();                                            // Print it out to the OLED
 }
 
 void loop() {
@@ -140,6 +142,7 @@ void loop() {
       g_oled.clearBuffer();
       g_oled.setCursor(9, g_linehight);
       g_oled.printf("FPS: %.1lf", fps);
+      //DrawReticle(); // 12.8 fps with this running every loop 22.7 without it
       g_oled.sendBuffer();
 
       // Handle LEDs
