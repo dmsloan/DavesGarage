@@ -5,6 +5,7 @@
 // File:        LED Episode 04
 //  
 // Description:
+//  Add board switching without having to change OLED_CLOCK etc
 //  Add FastLED
 //  OLED Graphics - Lines and Shapes - SPI & I2C
 //  Draws sample effects on the intergrated OLED
@@ -19,16 +20,31 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-// for the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
-// for the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
+// For the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
+// For the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
 
-#define OLED_CLOCK 4              // Pins for OLED display
-#define OLED_DATA 5
-#define OLED_RESET 16
+// The active board is declared in platformio.ini. The defined is all caps
+// and is a combination of the environment and the default_envs.
 
-#define NUM_LEDS 300            // FastLED definitions
-#define LED_PIN 6
-CRGB g_LEDs[NUM_LEDS] = {0};       //Frame buffer for FastLED
+#if defined(ARDUINO_HELTEC_WIFI_LORA_32)
+  #define OLED_CLOCK 15              // Pins for OLED display
+  #define OLED_DATA 4
+  #define OLED_RESET 16
+  #define LED_PIN 23 //Dave recomends pin 5 but it is being used by LoRa on my board
+#elif defined(ARDUINO_LOLIN32)
+  #define OLED_CLOCK 4              // Pins for OLED display
+  #define OLED_DATA 5
+  #define OLED_RESET 16
+  #define LED_PIN 5
+#else
+  #define OLED_CLOCK 4              // Pins for OLED display
+  #define OLED_DATA 5
+  #define OLED_RESET 16
+  #define LED_PIN 5
+#endif
+
+#define NUM_LEDS 300             // FastLED definitions
+CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
 int g_Brightness = 16;           // 0-255 LED brightness scale
 
 //U8G2_SSD1306_128X64_NONAME_F_SW_I2C g_oled(U8G2_R2, OLED_CLOCK, OLED_DATA, OLED_RESET); // uses Software I2C and results in a framerate of 5 FPS
