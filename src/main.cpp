@@ -67,6 +67,16 @@ void setup() {
   while (!Serial){};
   Serial.println("Dave's Garage Episode 4");
 
+for (int i = 50; i < 101; i++)
+{
+        Serial.print(g_LEDs[i].r);
+        Serial.print(", ");
+        Serial.print(g_LEDs[i].g);
+        Serial.print(", ");
+        Serial.println(g_LEDs[i].b);
+}
+
+
   g_oled.begin();
   g_oled.clear(); //sets curser at 0,0. Text draws from the bottom up so you will see nothing.
   g_oled.setFont(u8g2_font_profont15_tf);
@@ -158,7 +168,14 @@ void loop() {
       // fill_solid(g_LEDs, NUM_LEDS,CRGB::Green); // fills with a function form FastLed instead of using a loop
       fill_rainbow(g_LEDs, NUM_LEDS,initialHue += hueDensity, delaHue); // fills with a function form FastLed instead of using a loop
       FastLED.show();
-
+      for (int i = 100; i < 151; i++)
+      {
+        Serial.print(g_LEDs[i].r);
+        Serial.print(", ");
+        Serial.print(g_LEDs[i].g);
+        Serial.print(", ");
+        Serial.println(g_LEDs[i].b);
+      }
       double dEnd = millis() / 1000.0;      // Record the finish time
       fps = FramesPerSecond(dEnd - dStart); // Calculate the FPS rate
     }
