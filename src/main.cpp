@@ -20,6 +20,8 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
+#include "marquee.h"
+
 // For the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
 // For the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
 
@@ -52,29 +54,11 @@ CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
 int g_Brightness = 16;           // 0-255 LED brightness scale
 int g_MaxPowerInMilliWatts = 900; // Max power for the led strip
 
+int g_linehight = 0;              // variable fo rthe linehight for the OLED
+
 // clock and data got swapped around to use hardware I2C instead of software
 // U8G2_SSD1306_128X64_NONAME_F_SW_I2C g_oled(U8G2_R2, OLED_CLOCK, OLED_DATA, OLED_RESET); // uses Software I2C and results in a framerate of 5 FPS
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_oled(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED_DATA); // uses Hardware I2C and results in a framerate of 26 FPS 
-int g_linehight = 0;
-
-void setup() {
-  // put your setup code here, to run once:
-  pinMode(LED_BUILTIN,OUTPUT);
-  pinMode(LED_PIN,OUTPUT);
-
-  Serial.begin(115200);
-  while (!Serial){};
-  Serial.println("Dave's Garage Episode 4");
-
-  g_oled.begin();
-  g_oled.clear(); //sets curser at 0,0. Text draws from the bottom up so you will see nothing.
-  g_oled.setFont(u8g2_font_profont15_tf);
-  g_linehight = g_oled.getFontAscent() - g_oled.getFontDescent(); // Decent is a negative number so we add it to the total
- 
-  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);               // Add our LED strip to the FastLED library
-  FastLED.setBrightness(g_Brightness);
-  FastLED.setMaxPowerInMilliWatts(g_MaxPowerInMilliWatts);
-}
 
 // FramePerSecond
 //
@@ -87,40 +71,24 @@ double FramesPerSecond (double seconds){
   return framesPerSecond;
 }
 
-void DrawLinesAngGrapicaFrame(int framesPerSecond){
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(LED_BUILTIN,OUTPUT);
+  pinMode(LED_PIN,OUTPUT);
 
-  g_oled.clearBuffer();
-  g_oled.home();
+  Serial.begin(115200);
+  while (!Serial){};
+  Serial.println("Dave's Garage Episode 5");
 
-  g_oled.drawFrame(0,0,g_oled.getWidth(),g_oled.getHeight());     // Draw a boarder around the display
-
-  g_oled.setCursor(3,g_linehight * 2 + 2);
-  g_oled.print("Hello");
-  g_oled.setCursor(3,g_linehight * 3 + 2);
-  g_oled.print("World");
-  g_oled.setCursor(3,g_linehight * 4 + 2);
-  g_oled.printf("%03d", framesPerSecond);                         // Placeholder for frame rate
-
-  // Draw a morie pattern like its 1984
-
-  for (int x = 0; x < g_oled.getWidth(); x += 4)
-    g_oled.drawLine(x,0,g_oled.getWidth()-x,g_oled.getHeight());
-
-  // Draw a reticle on the right hand side
-
-  const int reticleY = g_oled.getHeight() / 2;                  // Vertical center of display
-  const int reticleR = g_oled.getHeight() / 4 - 2;              // Slightly less than 1/4 screen height
-  const int reticleX = g_oled.getWidth() - reticleR - 8;        // Right justified plus a margin
-   
-  for (int r = reticleR; r > 0; r -= 3)
-    g_oled.drawCircle(reticleX, reticleY, r);                   // Draw a series of nested circles
-
-  g_oled.drawHLine(reticleX - reticleR - 5, reticleY, 2 * reticleR + 10); // Horizontal line through center
-  g_oled.drawVLine(reticleX, reticleY - reticleR -5 , 2 * reticleR + 10); // Vertical line through center
-
-  g_oled.sendBuffer();                                            // Print it out to the OLED
+  g_oled.begin();
+  g_oled.clear(); //sets curser at 0,0. Text draws from the bottom up so you will see nothing.
+  g_oled.setFont(u8g2_font_profont15_tf);
+  g_linehight = g_oled.getFontAscent() - g_oled.getFontDescent(); // Decent is a negative number so we add it to the total
+ 
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);       // Add our LED strip to the FastLED library
+  FastLED.setBrightness(g_Brightness);
+  FastLED.setMaxPowerInMilliWatts(g_MaxPowerInMilliWatts);
 }
-
 void loop() {
   // put your main code here, to run repeatedly:
   
@@ -139,7 +107,7 @@ void loop() {
       double dStart = millis() / 1000.0;    // Record the start time
 
       // Handle OLED drawing
-//      DrawLinesAngGrapicaFrame(fps);
+      //      DrawLinesAngGrapicaFrame(fps);
       g_oled.clearBuffer();
       g_oled.setCursor(9, g_linehight);
       g_oled.printf("FPS: %.1lf", fps);
