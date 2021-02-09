@@ -15,12 +15,12 @@
 //
 //---------------------------------------------------------------------------
 
-#include <Arduino.h>    // Arduino Framework
+#include <Arduino.h>    // Arduino Framework <> searches the libraries paths
 #include <U8g2lib.h>  // For text on the little on-chip OLED
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-#include "marquee.h"
+//#include "marquee.h" // quotes to search the local folder
 
 // For the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
 // For the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
@@ -49,7 +49,7 @@
   #define LED_PIN 5 //Output pin for the WS2812B led strip.
 #endif
 
-#define NUM_LEDS 300             // FastLED definitions
+#define NUM_LEDS 150             // FastLED definitions
 CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
 int g_Brightness = 16;           // 0-255 LED brightness scale
 int g_MaxPowerInMilliWatts = 900; // Max power for the led strip
@@ -59,6 +59,26 @@ int g_linehight = 0;              // variable fo rthe linehight for the OLED
 // clock and data got swapped around to use hardware I2C instead of software
 // U8G2_SSD1306_128X64_NONAME_F_SW_I2C g_oled(U8G2_R2, OLED_CLOCK, OLED_DATA, OLED_RESET); // uses Software I2C and results in a framerate of 5 FPS
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_oled(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED_DATA); // uses Hardware I2C and results in a framerate of 26 FPS 
+
+void DrawMarquee(){
+    static byte j = HUE_BLUE;
+    j += 4;
+    byte k = j;
+
+    // The following is roughly equilivent to fill_rainbow(g_LEDs, NUM_LEDS, j, 0)
+
+    CRGB c;
+    for (int i = 0; i < NUM_LEDS ; i++)
+        g_LEDs[i] = c.setHue(k += 8);
+
+    static int scroll = 0; // static perserves value from one funtion call to the next
+        scroll++;
+
+    for (int i = scroll %5; i < NUM_LEDS; i+=5)
+        g_LEDs[i] = CRGB::Black;
+
+    delay(50);
+}
 
 // FramePerSecond
 //
@@ -89,15 +109,16 @@ void setup() {
   FastLED.setBrightness(g_Brightness);
   FastLED.setMaxPowerInMilliWatts(g_MaxPowerInMilliWatts);
 }
+
 void loop() {
   // put your main code here, to run repeatedly:
   
   static bool bLED = LOW;
   double fps = 0;
 
-  uint8_t initialHue = 0;
-  const uint8_t delaHue = 16;
-  const uint8_t hueDensity = 4;
+  uint8_t initialHue = 0;        // beginning rainbow color
+  const uint8_t delaHue = 10;    // number of leds per rainbow lower is more higher is less
+  const uint8_t hueDensity = 14; // speed the rainbow moves
 
   for (;;)                                  // This is a forever loop
     {
@@ -120,7 +141,9 @@ void loop() {
       // FastLED.show();
 
       // fill_solid(g_LEDs, NUM_LEDS,CRGB::Green); // fills with a function form FastLed instead of using a loop
-      fill_rainbow(g_LEDs, NUM_LEDS,initialHue += hueDensity, delaHue); // fills with a function form FastLed instead of using a loop
+//      fill_rainbow(g_LEDs, NUM_LEDS,initialHue += hueDensity, delaHue); // fills with a function form FastLed instead of using a loop
+
+      DrawMarquee();
       FastLED.show();
 
       double dEnd = millis() / 1000.0;      // Record the finish time

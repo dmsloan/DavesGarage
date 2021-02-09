@@ -20,14 +20,21 @@
 #include <FastLED.h>
 
 void DrawMarquee(){
-    static byte j =0;
+    static byte j = HUE_BLUE;
     j += 4;
     byte k = j;
 
     // The following is roughly equilivent to fill_rainbow(g_LEDs, NUM_LEDS, j, 0)
 
     CRGB c;
-    for (int i = 0; i < NUM_LEDS; i==)
-        g_LEDs(i) = c.setHue(k += 8);
+    for (int i = 0; i < NUM_LEDS ; i++)
+        g_LEDs[i] = c.setHue(k += 8);
 
+    static int scroll = 0; // static perserves value from one funtion call to the next
+        scroll++;
+
+    for (int i = scroll %5; i < NUM_LEDS; i+=5)
+        g_LEDs[i] = CRGB::Black;
+
+    delay(50);
 }
