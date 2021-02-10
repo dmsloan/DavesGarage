@@ -2,16 +2,16 @@
 // This is from a Youtube series by Dave's Garage
 // 
 //
-// File:        LED Episode 04
+// File:        LED Episode 05
 //  
 // Description:
-//  Add board switching without having to change OLED_CLOCK etc
+//  Added marquee.h file
 //  
 //  
 //  
 //  
 //
-// History:     Jan-26-2021     Derek      Created
+// History:     February-09-2021     Derek      Created
 //
 //---------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-//#include "marquee.h" // quotes to search the local folder
+const String sketchName = "Dave's Garage Episode 5";
 
 // For the heltec_wifi_lora_32 CLOCK 15 DATA 4 RESET 16
 // For the wemos lolin32 #define CLOCK 4 DATA 5 RESET 16
@@ -49,7 +49,7 @@
   #define LED_PIN 5 //Output pin for the WS2812B led strip.
 #endif
 
-#define NUM_LEDS 150             // FastLED definitions
+#define NUM_LEDS 300             // FastLED definitions
 CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
 int g_Brightness = 16;           // 0-255 LED brightness scale
 int g_MaxPowerInMilliWatts = 900; // Max power for the led strip
@@ -60,25 +60,9 @@ int g_linehight = 0;              // variable fo rthe linehight for the OLED
 // U8G2_SSD1306_128X64_NONAME_F_SW_I2C g_oled(U8G2_R2, OLED_CLOCK, OLED_DATA, OLED_RESET); // uses Software I2C and results in a framerate of 5 FPS
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_oled(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED_DATA); // uses Hardware I2C and results in a framerate of 26 FPS 
 
-void DrawMarquee(){
-    static byte j = HUE_BLUE;
-    j += 4;
-    byte k = j;
-
-    // The following is roughly equilivent to fill_rainbow(g_LEDs, NUM_LEDS, j, 0)
-
-    CRGB c;
-    for (int i = 0; i < NUM_LEDS ; i++)
-        g_LEDs[i] = c.setHue(k += 8);
-
-    static int scroll = 0; // static perserves value from one funtion call to the next
-        scroll++;
-
-    for (int i = scroll %5; i < NUM_LEDS; i+=5)
-        g_LEDs[i] = CRGB::Black;
-
-    delay(50);
-}
+#include "marquee.h" // quotes to search the local folder. Include statement must be made after variables are declared if they are to be 
+                     // used in the included .h file.
+#include "twinkle.h"
 
 // FramePerSecond
 //
@@ -98,7 +82,7 @@ void setup() {
 
   Serial.begin(115200);
   while (!Serial){};
-  Serial.println("Dave's Garage Episode 5");
+  Serial.println(sketchName);
 
   g_oled.begin();
   g_oled.clear(); //sets curser at 0,0. Text draws from the bottom up so you will see nothing.
@@ -143,6 +127,7 @@ void loop() {
       // fill_solid(g_LEDs, NUM_LEDS,CRGB::Green); // fills with a function form FastLed instead of using a loop
 //      fill_rainbow(g_LEDs, NUM_LEDS,initialHue += hueDensity, delaHue); // fills with a function form FastLed instead of using a loop
 
+//      DrawTwinkle();
       DrawMarquee();
       FastLED.show();
 

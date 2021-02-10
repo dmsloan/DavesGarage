@@ -33,8 +33,8 @@ void DrawMarquee(){
     static int scroll = 0; // static perserves value from one funtion call to the next
         scroll++;
 
-    for (int i = scroll %5; i < NUM_LEDS; i+=5)
+    for (int i = scroll %5; i < NUM_LEDS; i+=5)  //% is the modulo operator gives the remainder of a division of two values 
         g_LEDs[i] = CRGB::Black;
 
-    delay(50);
+    delay(500);
 }
