@@ -49,7 +49,7 @@ const String sketchName = "Dave's Garage Episode 5";
   #define LED_PIN 5 //Output pin for the WS2812B led strip.
 #endif
 
-#define NUM_LEDS 300             // FastLED definitions
+#define NUM_LEDS 150             // FastLED definitions
 CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
 int g_Brightness = 16;           // 0-255 LED brightness scale
 int g_MaxPowerInMilliWatts = 900; // Max power for the led strip
@@ -63,6 +63,8 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_oled(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED
 #include "marquee.h" // quotes to search the local folder. Include statement must be made after variables are declared if they are to be 
                      // used in the included .h file.
 #include "twinkle.h"
+#include "comet.h"
+
 
 // FramePerSecond
 //
@@ -128,7 +130,8 @@ void loop() {
 //      fill_rainbow(g_LEDs, NUM_LEDS,initialHue += hueDensity, delaHue); // fills with a function form FastLed instead of using a loop
 
 //      DrawTwinkle();
-      DrawMarquee();
+//      DrawMarquee();
+      DrawComet();
       FastLED.show();
 
       double dEnd = millis() / 1000.0;      // Record the finish time

@@ -1,5 +1,5 @@
 # Dave's Garage
-# Episode 4
+# Episode 5
 ## Add FastLED
 ## Add Wemos LOLIN32 board information
 ## 
@@ -8,16 +8,17 @@
 ### Need help or have a question? See Dave's Garage on YouTube.
 
 ## Contents
-- [Development Status](#development-status)
+- [Notes](#notes)
 - [Installation Instructions](#installation-instructions)
 - [Decoding Exceptions](#decoding-exceptions)
 - [Issue/Bug report template](#issuebug-report-template)
 - [WEMOS LOLIN32 with OLED Board](#WEMOS-LOLIN32)
 - [Heltec WiFi LORA 32 V1](#Heltec-WiFi-LORA-32-V1)
 
-## Development Status
+## Notes
 
-Working at this whole thing.
+10 leds .48 amps
+Rounding up a bit to 0.05 amps = 50 ma per LED on full bright with a color of white.
 
 ## Installation Instructions
 - Use VS Code and PlatformIO

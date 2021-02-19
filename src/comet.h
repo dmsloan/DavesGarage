@@ -42,5 +42,5 @@ void DrawComet()
         if (random(10) > 5)
             g_LEDs[j] = g_LEDs[j].fadeToBlackBy(fadeAmt);  
 
-    delay(50);
+    // delay(0);
 }
