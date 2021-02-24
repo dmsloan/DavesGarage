@@ -20,6 +20,9 @@ extern CRGB g_LEDs[];
 
 void DrawComet()
 {
+    static int lNumber = 0;
+    for (lNumber = 0; lNumber < NUM_LEDS * 6; lNumber++) 
+    {
     const byte fadeAmt = 128;
     const int cometSize = 5;
     const int deltaHue  = 4;
@@ -35,12 +38,14 @@ void DrawComet()
         iDirection *= -1;
     
     for (int i = 0; i < cometSize; i++)
-        g_LEDs[iPos + i].setHue(hue);
-    
+//        g_LEDs[iPos + i].setColorCode(0xFFFFFF); // set to pure white via hex
+          g_LEDs[iPos + 1] = CRGB( 255, 255, 255) ; // set to pure white via RGB
     // Randomly fade the LEDs
     for (int j = 0; j < NUM_LEDS; j++)
         if (random(10) > 5)
             g_LEDs[j] = g_LEDs[j].fadeToBlackBy(fadeAmt);  
-
-    // delay(0);
+    FastLED.show();
+    Serial.println(lNumber);
+    delay(10);
+    }
 }

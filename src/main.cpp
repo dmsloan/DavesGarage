@@ -51,8 +51,8 @@ const String sketchName = "Dave's Garage Episode 5";
 
 #define NUM_LEDS 150             // FastLED definitions
 CRGB g_LEDs[NUM_LEDS] = {0};     //Frame buffer for FastLED
-int g_Brightness = 16;           // 0-255 LED brightness scale
-int g_MaxPowerInMilliWatts = 900; // Max power for the led strip
+int g_Brightness = 255;           // 0-255 LED brightness scale
+int g_MaxPowerInMilliWatts = 2500; // Max power for the led strip
 
 int g_linehight = 0;              // variable fo rthe linehight for the OLED
 
@@ -64,7 +64,7 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C g_oled(U8G2_R2, OLED_RESET, OLED_CLOCK, OLED
                      // used in the included .h file.
 #include "twinkle.h"
 #include "comet.h"
-
+#include "randomFlashes.h"
 
 // FramePerSecond
 //
@@ -108,9 +108,9 @@ void loop() {
 
   for (;;)                                  // This is a forever loop
     {
+
       bLED = !bLED;                         // Toggle the LED state
       digitalWrite(LED_BUILTIN,bLED);
-
       double dStart = millis() / 1000.0;    // Record the start time
 
       // Handle OLED drawing
@@ -132,7 +132,8 @@ void loop() {
 //      DrawTwinkle();
 //      DrawMarquee();
       DrawComet();
-      FastLED.show();
+      RandomFlashes();
+//      FastLED.show();
 
       double dEnd = millis() / 1000.0;      // Record the finish time
       fps = FramesPerSecond(dEnd - dStart); // Calculate the FPS rate
